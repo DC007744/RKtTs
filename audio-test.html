@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Playback Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Audio Playback Test</h1>
+    <p>This page demonstrates how to fix the "play() failed because the user didn't interact with the document first" error.</p>
+    
+    <h2>Problem</h2>
+    <p>Browsers prevent websites from automatically playing audio without user interaction as a security feature.</p>
+    <p>The error occurs when trying to call <code>audio.play()</code> without prior user interaction with the page.</p>
+    
+    <h2>Solution</h2>
+    <p>Require user interaction (like a button click) before playing audio.</p>
+    
+    <div>
+        <h3>Test 1: Auto-play (will fail)</h3>
+        <button id="createAutoPlayAudio">Try Auto-play</button>
+        <div id="autoPlayResult"></div>
+    </div>
+    
+    <div>
+        <h3>Test 2: Play after user interaction (will succeed)</h3>
+        <button id="playAudioButton">Play Audio</button>
+        <div id="userInteractionResult"></div>
+    </div>
+    
+    <h2>Code Implementation</h2>
+    <pre>
+// Bad approach (will fail)
+// Use a data URI for a short beep sound instead of an external URL
+const audio = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU9vT18AAAAA');
+audio.play().catch(error => {
+  console.error('Error playing audio:', error);
+});
+
+// Good approach (will succeed)
+document.getElementById('playButton').addEventListener('click', () => {
+  // Use a data URI for a short beep sound instead of an external URL
+  const audio = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU9vT18AAAAA');
+  audio.play().then(() => {
+    console.log('Audio playback started successfully');
+  }).catch(error => {
+    console.error('Error playing audio:', error);
+  });
+});
+    </pre>
+    
+    <script>
+        // Test 1: Auto-play (will fail)
+        document.getElementById('createAutoPlayAudio').addEventListener('click', () => {
+            const resultDiv = document.getElementById('autoPlayResult');
+            resultDiv.innerHTML = '';
+            
+            // Create a new audio element that tries to play automatically
+            // Use a data URI for a short beep sound instead of an external URL
+            const audio = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU9vT18AAAAA');
+            
+            // Try to play it immediately (this will fail without user interaction)
+            setTimeout(() => {
+                audio.play().then(() => {
+                    resultDiv.innerHTML = '<p class="success">Success! Audio is playing.</p>';
+                }).catch(error => {
+                    resultDiv.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+                    console.error('Auto-play error:', error);
+                });
+            }, 100);
+        });
+        
+        // Test 2: Play after user interaction (will succeed)
+        document.getElementById('playAudioButton').addEventListener('click', () => {
+            const resultDiv = document.getElementById('userInteractionResult');
+            resultDiv.innerHTML = '';
+            
+            // Create and play audio after user interaction (button click)
+            // Use a data URI for a short beep sound instead of an external URL
+            const audio = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU9vT18AAAAA');
+            
+            audio.play().then(() => {
+                resultDiv.innerHTML = '<p class="success">Success! Audio is playing.</p>';
+            }).catch(error => {
+                resultDiv.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+                console.error('User interaction play error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
